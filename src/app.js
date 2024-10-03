@@ -1,15 +1,13 @@
+//creamos la instancia principal de vue
 let app = Vue.createApp({
   //aqui añadimos dos propiedades importantes
   data() {
     return {
-      //showSidebar es un booleano que controla si el
-      //sidebar se muestra o no
+      //showSidebar controla si el carrito (sidebar se muestra o no)
       showSidebar: false,
-      //inventory, que contiene la cantidad de productos
-      //que se pueden añadir a cada carrito
-      //cada producto lo enlazamos con el campo de entrada input usando v-model
+      //inventory es un array que contiene los productos disponibles
       inventory: [],
-      //cart guarda la cantidad de productos que actualmente están en el carrito
+      //cart es un objeto que almacena los productos añadidos al carrito
       cart: {},
     };
   },
@@ -23,13 +21,13 @@ let app = Vue.createApp({
   },
 
   methods: {
-    //la cantidad seleccionada de ese producto en inventory
-    //se suma a la cantidad actual del carrito para ese producto
+    //Añade un producto al carrito. name es el nombre del producto, 
+    //index es su posición en el array inventory
     addToCart(name, index) {
       if (!this.cart[name]) this.cart[name] = 0;
-      //type es un nombre de parámetro, lo que se pasa a esa función
-      //son los strings de carrots, pineapples o cherries
+      //Aumenta la cantidad del producto en el carrito
       this.cart[name] += this.inventory[index].quantity;
+      //Resetea la cantidad del producto en el inventario a 0
       this.inventory[index].quantity = 0;
       console.log(this.cart);
     },
@@ -64,6 +62,7 @@ app.component("sidebar", {
   //que es una función que se ejecuta cuando se hace click en el botón de cerrar
   props: ["toggle", "cart", "inventory", "remove"],
   methods: {
+    //obtiene el precio del producto en base a su nombre
     getPrice(name) {
       const product = this.inventory.find((p) => {
         return p.name === name;
@@ -71,7 +70,7 @@ app.component("sidebar", {
       return product.price.USD;
     },
     calculateTotal() {
-      // [key, value]
+      //Calcula el total del carrito multiplicando la cantidad por precio de cada producto
       const total = Object.entries(this.cart).reduce((acc, curr, index) => {
         return acc + curr[1] * this.getPrice(curr[0]);
       }, 0); // Proporcionar un valor inicial de 0
@@ -102,6 +101,7 @@ app.component("sidebar", {
                     </tr>
                   </thead>
                   <tbody>
+                  <!-- Itera sobre el objeto cart y muestra los productos en el carrito -->
                     <tr v-for="(quantity, key, i) in cart" :key="i">
                       <td><i class="icofont-carrot icofont-3x"></i></td>
                       <td>{{ key }}</td>
@@ -116,7 +116,7 @@ app.component("sidebar", {
                     </tr>
                   </tbody>
                 </table>
-
+              <!--Mensaje que se muestra si no hay productos en el carrito-->
                 <p v-if="!Object.keys(cart).length" class="center"><em>No items in cart</em></p>
                 <div v-else class="spread">
                   <span><strong>Total:</strong> \$ {{ calculateTotal() }}</span>

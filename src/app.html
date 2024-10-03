@@ -21,38 +21,47 @@
             <span>Past Orders</span>
           </a>
         </nav>
+
         <!--Cuando haces click, se ejecuta la función toggleSidebar
-        lo que hace que el componente se muestre o se oculte-->
+        lo que hace que el carrito se muestre o se oculte-->
         <a @click="toggleSidebar" class="top-bar-cart-link">
           <i class="icofont-cart-alt icofont-1x"></i>
           <span>Cart {{ totalQuantity }}</span>
         </a>
       </header>
 
+      <!--Pantalla de bienvenida, con el título de la aplicación-->
       <div class="splash-container">
         <div class="splash">
           <h1>Splendid Food</h1>
         </div>
       </div>
 
+      <!--Esta es la sección principal, con los productos recomendados-->
       <main class="wrapper">
         <h2>Recommended</h2>
 
         <div class="recommended">
-          <!--Aquí, cogemos el id de los productos-->
+          <!--Vamos a recorrer los primeros tres productos del
+          inventario (inventory) con v-for. -->
+          <!--Se utiliza 'i' como índice, y cada producto tiene una 
+          'key' única -->
           <div
             v-for="(product, i) in inventory.slice(0, 3)"
             :key="i"
             class="card"
           >
+            <!--Mostramos el nombre del producto-->
             <div class="card-title">{{ product.name }}</div>
             <div class="card-body">
+              <!--Mostramos el icono del producto-->
               <i :class="'icofont-10x ' + product.icon"></i>
               <form>
                 <div class="row">
                   <div class="cell">
                     <label>Type:</label>
                   </div>
+                  <!--Mostramos el tipo de producto-->
                   <div class="cell">
                     <em>{{ product.type }}</em>
                   </div>
@@ -61,6 +70,7 @@
                   <div class="cell">
                     <label>Price:</label>
                   </div>
+                  <!--Mostramos el precio del producto-->
                   <div class="cell">${{ product.price.USD }}</div>
                 </div>
                 <div class="row">
@@ -68,22 +78,18 @@
                     <label>Quantity:</label>
                   </div>
                   <div class="cell">
-                    <!--Para que el número de inventario se cambie
-                    a todos los productos individualmente, no sólo a carrots
-                    en el bucle v-for de arriba, obtenemos el id de los productos-->
+                    <!--Input para seleccionar la cantidad, este valor lo enlazamos con
+                    inventory[i].quantity -->
                     <input
                       type="number"
                       v-model.number="inventory[i].quantity"
                     />
-                    <!--Cuando el usuario ajusta la cantidad de zanahorias,
-                    el valor se guarda automáticamente en inventory.carrots-->
                   </div>
                 </div>
               </form>
             </div>
             <div class="card-footer">
-              <!--Cuando haces click, se ejecuta la función addToCart-->
-              <!--Tenemos que cambiar el valor que le pasamos a addToCart-->
+              <!--Botón para añadir el producto al carrito. Llama a la función addToCart -->
               <button @click="addToCart(product.name, i)" class="btn btn-light">
                 Add to cart
               </button>
@@ -91,8 +97,8 @@
           </div>
         </div>
       </main>
-      <!--hacemos el v- if para que si está en false no aparezca
-       y si está en true si-->
+      <!--Sidebar que contiene el carrito de compras
+      Se muestra solo si showSidebar es true gracias a v-if -->
       <sidebar
         v-if="showSidebar"
         :toggle="toggleSidebar"
@@ -101,9 +107,11 @@
         :remove="remove"
       />
 
+      <!--Footer de la aplicación, aún vacío-->
       <footer></footer>
     </div>
 
+    <!--El script está en app.js-->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="app.js"></script>
   </body>
